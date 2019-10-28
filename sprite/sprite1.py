@@ -69,7 +69,8 @@ def main():
                     laoZhang.var_x = -10
                 if event.key in (K_d, K_RIGHT):
                     laoZhang.var_x = 10
-            laoZhang.update()
+            # laoZhang.update()
+            simpleGroup.update()
         updateDisplay()
 
 if __name__ == "__main__":
