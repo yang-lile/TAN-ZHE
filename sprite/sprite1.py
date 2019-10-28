@@ -12,6 +12,11 @@ simpleGroup = pygame.sprite.OrderedUpdates()
 # it is a key function
 # function: repack update(), make it update sprite.
 def updateDisplay():
+    # this is a low inefficient ((((algorithm))))mark down this word to learn it.
+    simpleGroup.update()
+    # every update will all do. but it is waste for the program.
+    # so we should update at a specific time.
+
     # draw now status on screen(there are two status on the screen)
     simpleGroup.draw(screen)
     # update it to the screen
@@ -70,7 +75,7 @@ def main():
                 if event.key in (K_d, K_RIGHT):
                     laoZhang.var_x = 10
             # laoZhang.update()
-            simpleGroup.update()
+            # simpleGroup.update()
         updateDisplay()
 
 if __name__ == "__main__":
