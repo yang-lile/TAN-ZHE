@@ -8,7 +8,9 @@ screen = ""
 bgSurface = ""
 # this is a group of sprite, but name is different.
 simpleGroup = pygame.sprite.OrderedUpdates()
-
+# set FPS 
+FPS = 60
+SPEED = 10
 # it is a key function
 # function: repack update(), make it update sprite.
 def updateDisplay():
@@ -49,6 +51,16 @@ class DongDong(pygame.sprite.Sprite):
         self.var_x = 0
         self.var_y = 0
         # updateDisplay()
+    def move(self):
+        if self.status_UP:
+            self.var_y = -SPEED
+        if self.status_DOWN:
+            self.var_y = SPEED
+        if self.status_LEFT:
+            self.var_x = -SPEED
+        if self.status_RIGHT:
+            self.var_x = SPEED
+
 
 def main():
     # reference global value is like our globalValue.py
@@ -65,18 +77,16 @@ def main():
     simpleGroup.add(laoZhang)
     simpleGroup.draw(screen)
 
-    
-    # print(pygame.key.get_repeat())
+    fpsClock = pygame.time.Clock()
+    pygame.key.set_repeat(10, 10)
     while True:
-        # time.sleep(0.05)
-        pygame.key.set_repeat(0, 50)
-        for event in pygame.event.get():
-            if event.type in (pygame.locals.K_ESCAPE, QUIT):
+        for event in pygame.event.get():    
+            if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
             
             # click on the status
-            elif event.type == pygame.locals.KEYDOWN:
+            if event.type == pygame.locals.KEYDOWN:
                 if event.key in (K_w, K_UP):
                     laoZhang.status_UP = True
                 if event.key in (K_s, K_DOWN):
@@ -85,9 +95,11 @@ def main():
                     laoZhang.status_LEFT = True
                 if event.key in (K_d, K_RIGHT):
                     laoZhang.status_RIGHT = True
+                laoZhang.move()
+                updateDisplay()
+                continue
             # click off the status
-            elif event.type == pygame.locals.KEYUP:
-                print("积分而非")
+            if event.type == pygame.locals.KEYUP:
                 if event.key in (K_w, K_UP):
                     laoZhang.status_UP = False
                 if event.key in (K_s, K_DOWN):
@@ -97,18 +109,9 @@ def main():
                 if event.key in (K_d, K_RIGHT):
                     laoZhang.status_RIGHT = False
             # move it
-            if laoZhang.status_UP:
-                laoZhang.var_y = -10
-            if laoZhang.status_DOWN:
-                laoZhang.var_y = 10
-            if laoZhang.status_LEFT:
-                laoZhang.var_x = -10
-            if laoZhang.status_RIGHT:
-                laoZhang.var_x = 10
-            # laoZhang.update()
-            # simpleGroup.update()
+            # laoZhang.move()
         updateDisplay()
-        # time.sleep()
+        fpsClock.tick(FPS)
 
 
 
