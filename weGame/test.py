@@ -5,6 +5,7 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode((1080,960))
     screen.fill((125,125,125))
 
+
     upImage = pygame.image.load("up.png").convert_alpha()
     screen.blit(upImage,(0,0))
 
