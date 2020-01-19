@@ -3,6 +3,8 @@ import pygame.locals
 
 FPS = 60
 
+# 测试了按键响应
+
 def main():
     sceen = pygame.display.set_mode((1080,960))
     sceen.fill((11,11,11))
