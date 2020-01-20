@@ -1,15 +1,38 @@
 import pygame
-# fontAddress = "./src/font/ziti.ttf"
-# gameFont = pygame.font.Font(fontAddress,70)
 
 class Game:
     __width = 960
     __height = 640
+    # 测试使用的精灵
     spriteList = pygame.sprite.Group()
-    fontAddress = "./src/font/ziti.ttf"
+    __fontAddress = "./src/font/OPPOSans-L.ttf"
     pygame.font.init()
-    gameFont = pygame.font.Font(fontAddress,40)
+    gameFont = pygame.font.Font(__fontAddress,40)
+    __GameMap = {
+        "牢房1":{
+            "地图":
+                [
+                    [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, ],
+                    [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, ],
+                    [6, 6, 6, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 6, 6, 6, 6, 6, ],
+                    [6, 6, 6, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 6, 6, 6, 6, 6, ],
+                    [6, 6, 6, 2, 2, 1, 4, 4, 1, 4, 4, 1, 4, 4, 1, 4, 4, 1, 7, 6, 6, 6, 6, 6, ],
+                    [6, 6, 6, 2, 2, 1, 4, 4, 1, 4, 4, 1, 4, 4, 1, 4, 4, 1, 7, 6, 6, 6, 6, 6, ],
+                    [6, 6, 6, 2, 2, 1, 4, 4, 1, 4, 4, 1, 4, 4, 1, 4, 4, 1, 7, 6, 6, 6, 6, 6, ],
+                    [6, 6, 6, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 7, 6, 6, 6, 6, 6, ],
+                    [6, 6, 6, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 7, 6, 6, 6, 6, 6, ],
+                    [6, 6, 6, 2, 2, 4, 4, 1, 4, 4, 1, 4, 4, 1, 4, 4, 1, 1, 7, 6, 6, 6, 6, 6, ],
+                    [6, 6, 6, 2, 2, 4, 4, 1, 4, 4, 1, 4, 4, 1, 4, 4, 1, 1, 7, 6, 6, 6, 6, 6, ],
+                    [6, 6, 6, 2, 2, 4, 4, 1, 4, 4, 1, 4, 4, 1, 4, 4, 1, 1, 7, 6, 6, 6, 6, 6, ],
+                    [6, 6, 6, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 6, 6, 6, 6, 6, ],
+                    [6, 6, 6, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 6, 6, 6, 6, 6, ],
+                    [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, ],
+                    [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, ],
+                ],
+            "人物":[]
+        },
 
+    }
     # 初始化的时候需要做的事情
     def __init__(self):
         pygame.init()
@@ -21,7 +44,7 @@ class Game:
     def initMainPage(self):
         # 背景绘制
         self.buttonList = pygame.sprite.Group()
-        bgImage = pygame.image.load("./src/background.png")
+        bgImage = pygame.image.load("./src/image/background.png")
         self.screen.blit(bgImage,(0,0))
 
         # 菜单绘制
@@ -34,10 +57,11 @@ class Game:
 
         pygame.display.flip()
     
-    # 
-
-    # def __call__(self):
-    #     pass
+    # 初始化游戏地图，传入地图参数，人物精灵组
+    def initMap(self,mapNum):
+        for i in self.__GameMap.keys():
+            if i == mapNum:
+                
 
     # 对整个游戏进行渲染
     def render(self):
@@ -62,11 +86,10 @@ class Game:
 
 # 地图块类
 class MapBlock(pygame.sprite.Sprite):
-    
     def __init__(self):
         # 初始化的时候需要先调用父类的初始化函数
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("./src/up.png")
+        self.image = pygame.image.load("./src/image/up.png")
         self.rect = self.image.get_rect()
         self.rect.center = (320,33)
     
@@ -78,8 +101,8 @@ class Button(pygame.sprite.Sprite):
     def __init__(self,name,location):
         # 初始化的时候需要先调用父类的初始化函数
         pygame.sprite.Sprite.__init__(self)
-        self.imageUp = pygame.image.load("./src/buttonUp.png")
-        self.imageDown = pygame.image.load("./src/buttonDown.png")
+        self.imageUp = pygame.image.load("./src/image/buttonUp.png")
+        self.imageDown = pygame.image.load("./src/image/buttonDown.png")
         self.image = self.imageUp
         self.rect = self.imageUp.get_rect()
         # self.rect.center = 
@@ -103,6 +126,7 @@ class Button(pygame.sprite.Sprite):
         w, h = self.imageUp.get_size()
         x, y = self.rect.center
 
+        Game.gameFont.set_bold(True)
         itemName = Game.gameFont.render(self.name, True, (0,0,0))
         i,j = Game.gameFont.size(self.name)
         pos = (x-i/2, y-j/2)
