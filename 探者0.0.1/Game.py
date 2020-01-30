@@ -1,13 +1,18 @@
+import os,fnmatch
 import pygame
+import mapBlock
 
 class Game:
     __width = 960
     __height = 640
     # 测试使用的精灵
     spriteList = pygame.sprite.Group()
+    # 字体模块的初始化
     __fontAddress = "./src/font/OPPOSans-L.ttf"
     pygame.font.init()
     gameFont = pygame.font.Font(__fontAddress,40)
+    # 判断是否有存档，默认为否
+    __archive = False
     __GameMap = {
         "牢房1":{
             "地图":
@@ -31,12 +36,14 @@ class Game:
                 ],
             "人物":[]
         },
-
+        # 添加其他的地图
     }
+
     # 初始化的时候需要做的事情
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((self.__width,self.__height))
+        # 读档，并设置__archive为True
+        self.__screen = pygame.display.set_mode((self.__width,self.__height))
         pygame.display.set_caption("探者")
         self.clock = pygame.time.Clock()
     
@@ -45,28 +52,72 @@ class Game:
         # 背景绘制
         self.buttonList = pygame.sprite.Group()
         bgImage = pygame.image.load("./src/image/background.png")
-        self.screen.blit(bgImage,(0,0))
+        self.__screen.blit(bgImage,(0,0))
 
         # 菜单绘制
-        names = ['开始游戏','继续游戏','成就','设置']
+        names = ["开始游戏","继续游戏","成就","设置"]
         for i in range(0,4):
             button = Button(names[i],(744,158+i*108))
             self.buttonList.add(button)
         print(self.buttonList.sprites())
-        self.buttonList.draw(self.screen)
+        self.buttonList.draw(self.__screen)
 
         pygame.display.flip()
     
     # 初始化游戏地图，传入地图参数，人物精灵组
-    def initMap(self,mapNum):
-        for i in self.__GameMap.keys():
-            if i == mapNum:
-                
-
+    # 只绘制
+    def initMap(self,mapNum):# 第一张地图传入数据"牢房1"
+        # 绘制地图到备份底图
+        self.__screenMap = self.__screen
+        for i in range(0,16):
+            for j in range(0,24):
+                if self.__GameMap[mapNum]["地图"][i][j] == 1:
+                    block = mapBlock.BlockGreen((j*40+20,i*40+20))
+                elif self.__GameMap[mapNum]["地图"][i][j] == 2:
+                    block = mapBlock.BlockBlue((j*40+20,i*40+20))
+                elif self.__GameMap[mapNum]["地图"][i][j] == 3:
+                    block = mapBlock.BlockPurple((j*40+20,i*40+20))
+                elif self.__GameMap[mapNum]["地图"][i][j] == 4:
+                    block = mapBlock.BlockRed((j*40+20,i*40+20))
+                elif self.__GameMap[mapNum]["地图"][i][j] == 5:
+                    block = mapBlock.BlockYellow((j*40+20,i*40+20))
+                elif self.__GameMap[mapNum]["地图"][i][j] == 6:
+                    block = mapBlock.BlockGray((j*40+20,i*40+20))
+                elif self.__GameMap[mapNum]["地图"][i][j] == 7:
+                    block = mapBlock.BlockPeople((j*40+20,i*40+20))
+                else:
+                    print("反正出bug了我也不会修")
+                block.render(self.__screenMap)
+        # 绘制人物
+        for people in self.__GameMap[mapNum]['人物']:
+            # TODO：绘制人物到屏幕上
+        # 反转更新
+        self.__screen = self.__screenMap
+        # 暂时不反转
+        # self.__screen.flip()
+    
+    # 开始游戏
+    def playGame(self, flag = False):
+        # 读取游戏存档
+        if flag:
+            archiveList = []
+            for f_name in os.listdir("./userData"):
+                if fnmatch.fnmatch(f_name,"game_*_backup.data"):
+                    archiveList.append(f_name)
+        # 数据读取到了之后加载出来
+        self.initMap("牢房1")
+        while True:
+            self.clock.Clock(60)
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
+                self.__screen
+    
     # 对整个游戏进行渲染
     def render(self):
         # 在进行下面的操作之前，先初始化地图
-        self.spriteList.draw(self.screen)
+        self.spriteList.draw(self.__screen)
         pygame.display.flip()
 
     # 对整个游戏进行更新
@@ -84,18 +135,6 @@ class Game:
         self.update()
         self.render()
 
-# 地图块类
-class MapBlock(pygame.sprite.Sprite):
-    def __init__(self):
-        # 初始化的时候需要先调用父类的初始化函数
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("./src/image/up.png")
-        self.rect = self.image.get_rect()
-        self.rect.center = (320,33)
-    
-    def update(self):
-        pass
-
 # 按钮类
 class Button(pygame.sprite.Sprite):
     def __init__(self,name,location):
@@ -105,7 +144,6 @@ class Button(pygame.sprite.Sprite):
         self.imageDown = pygame.image.load("./src/image/buttonDown.png")
         self.image = self.imageUp
         self.rect = self.imageUp.get_rect()
-        # self.rect.center = 
         self.rect.center = location
         self.name = name
 
@@ -138,10 +176,3 @@ class Button(pygame.sprite.Sprite):
             screen.blit(self.imageUp, (x-w/2, y-h/2))
             screen.blit(itemName, pos)
             return False
-
-
-# 开始游戏
-# 继续游戏
-#     存档
-# 成就
-# 设置

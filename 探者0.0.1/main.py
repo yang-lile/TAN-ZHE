@@ -1,9 +1,9 @@
 import sys,pygame
 from pygame.locals import *
-import Game
+from Game import Game
 
 def main():
-    game = Game.Game()
+    game = Game()
     game.initMainPage()
     # block = Game.MapBlock()
     # game.addSprite(block)
@@ -19,6 +19,7 @@ def main():
                 flag = i.render(game.screen)
                 if flag and event.type == MOUSEBUTTONDOWN:
                     if i.name == '开始游戏':
+                        
                         print('开始游戏')
                     elif i.name == '继续游戏':
                         print('继续游戏')
