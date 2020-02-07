@@ -19,7 +19,8 @@ def updateDisplay():
     # every update will all do. but it is waste for the program.
     # so we should update at a specific time.
 
-    # draw now status on screen(there are two status on the screen)
+    # draw now status 
+    # on screen(there are two status on the screen)
     simpleGroup.draw(screen)
     # update it to the screen
     pygame.display.update()

@@ -73,6 +73,11 @@ class BlockYangRenyuFront(PeopleBlock):
     def __init__(self, position):
         super(BlockYangRenyuFront, self).__init__(position)
         self.colorImage = pygame.image.load("src/image/监狱头子.png")
+class BlockNPC(PeopleBlock):
+    id = 8
+    def __init__(self, position):
+        super(BlockNPC, self).__init__(position)
+        self.colorImage = pygame.image.load("src/image/npc.png")
 
 class ManagerBlock:
     blockList = [
@@ -112,7 +117,7 @@ __GameMap = {
                 [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, ],
                 [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, ],
             ],
-        "人物":[]
+        "人物":[BlockNPC((10,9))]
     },
     # 添加其他的地图
 }
@@ -125,8 +130,10 @@ if __name__ == "__main__":
         for j in range(0,24):
             block = MB.findBlock2Create(__GameMap['牢房1']['地图'][i][j])((j,i))
             block.render(screen)
-    block = BlockYangRenyuFront((3,4))
+    block = BlockYangRenyuFront((8,8))
     block.render(screen)
+    for i in __GameMap['牢房1']['人物']:
+        i.render(screen)
     
     while True:
         for event in pygame.event.get():
